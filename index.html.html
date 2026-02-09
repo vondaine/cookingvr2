@@ -126,23 +126,21 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    const toast = document.getElementById('toast');
+    const input = document.querySelector('input');
+    const button = document.querySelector('button');
 
-    function randomSixDigit() {
-      return Math.floor(100000 + Math.random() * 900000);
-    }
+   button.addEventListener('click', async () => {
+     const value = input.value.trim();
+     if (!value) return;
 
-    function showFakeLogin() {
-      const id = randomSixDigit();
-      toast.textContent = `USER:${id} LOGGED`;
-      toast.classList.add('show');
+     await fetch('/api/submit', {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify({ value })
+     });
 
-      setTimeout(() => toast.classList.remove('show'), 2200);
-    }
-
-    // start loop
-    showFakeLogin();
-    setInterval(showFakeLogin, 3500);
+    input.value = '';
+  });
   </script>
 </body>
 </html>
